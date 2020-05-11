@@ -84,7 +84,7 @@ export default App = () => {
         </View>
           {randomQuestions[questionNumber].getOptions.map((item, i)=>{
           return (
-            <Button key={i} theme={(i === correct)? Greentheme :theme}  mode="contained" style= {styles.options} onPress = {()=>{checkAnswer(i)}}>
+            <Button key={i} theme={(i === correct)? Greentheme :theme}  mode="contained" style= {styles.options} onPress = {()=>{if(!answered)checkAnswer(i)}}>
               {item}
             </Button>
           )
