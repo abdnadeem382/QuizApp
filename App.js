@@ -60,6 +60,7 @@ export default App = () => {
       <Button
         mode = "contained"
         style = {styles.options}
+        disabled ={answered ? false: true}
         theme= {finsihTheme}
         onPress= {()=>{setQuestionNumber(0);
           setScore(0);
