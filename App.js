@@ -5,17 +5,14 @@ import data from './DummyData';
 
 let shuffled = [];
 let randomQuestions = [];
+let colors= ["#8de3d3","#8de3d3","#8de3d3","#8de3d3"]
 
 export default App = () => {
   const [started, setStarted] = useState(false);
   const [questionNumber, setQuestionNumber] = useState(0);
   const [score, setScore] = useState(0);
   const [answered, setAnswered] = useState(false);
-  const [correct, setCorrect] = useState(4);
-  const [questions, setQuestions] = useState([])
   
-
- 
   showStart = () =>{
     return(
       <View style = {styles.container}>
@@ -35,24 +32,27 @@ export default App = () => {
   checkAnswer = (answerNo)=>{
     if(answerNo === randomQuestions[questionNumber].getAnswer){
       setScore((score)=>score+1); 
-      setCorrect(answerNo);
+      colors[answerNo] = "#10c227"
+      
     }
     else{
-      setScore((score)=>score);
-      setCorrect(-1)
+      colors[answerNo] = "#bd0e08"
+      colors[randomQuestions[questionNumber].getAnswer] = "#10c227"
     }
     setAnswered(true)
   }
   
   showApp = () =>{
+    if(!answered){
+      colors = ["#8de3d3","#8de3d3","#8de3d3","#8de3d3"];
+    }
     const fab = ( <FAB
       theme={theme}
       style={styles.fab}
       icon="forward"
       disabled ={answered ? false: true}
       onPress={() => {if(questionNumber <randomQuestions.length-1){
-                      setQuestionNumber((questionNumber)=>questionNumber+1)
-                      setCorrect(4)}
+                      setQuestionNumber((questionNumber)=>questionNumber+1)}
                       setAnswered(false)
                     }}
     />)
@@ -64,7 +64,6 @@ export default App = () => {
         theme= {finsihTheme}
         onPress= {()=>{setQuestionNumber(0);
           setScore(0);
-          setCorrect(4)
           setStarted(false);
           setAnswered(false)
          }
@@ -85,12 +84,14 @@ export default App = () => {
         </View>
           {randomQuestions[questionNumber].getOptions.map((item, i)=>{
           return (
-            <Button key={i} theme={(i === correct)? Greentheme :theme}  mode="contained" style= {styles.options} onPress = {()=>{if(!answered)checkAnswer(i)}}>
+            <Button key={i} theme={selectTheme(colors[i])} 
+            mode="contained" style= {styles.options} 
+            onPress = {()=>{if(!answered)checkAnswer(i)}}>
               {item}
             </Button>
           )
         })}
-        {(questionNumber === 4) ? finish : fab}
+        {(questionNumber === randomQuestions[questionNumber].getOptions.length) ? finish : fab}
        
       </View>
       
@@ -113,29 +114,14 @@ const finsihTheme ={
     primary:"#4f8065"
   }
 }
-const Redtheme = {
-  colors:{
-    primary: "#bd0e08"
+
+const selectTheme = (color)=>{
+  return {
+    colors:{
+      primary: color
+    }
   }
 }
-
-const Greentheme = {
-  colors:{
-    primary: "#10c227"
-  }
-}
-
-// const T = ()=>{
-//   if (correct === randomQuestions[questionNumber].getAnswer.getAnswer){
-//     return Greentheme
-//   }
-//   if(correct === -1){
-//     return Redtheme
-//   }
-//   else{
-//     return theme
-//   }
-// }
 
 const styles = StyleSheet.create({
   container: {
@@ -188,20 +174,4 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
   },
- 
 });
-// <View style={styles.questionContainer} onPress = {()=>{checkAnswer(0)}}>
-//           <Text style ={styles.question}>{randomQuestions[questionNumber].getQuestion}</Text>
-//         </View>
-//         <Button theme={theme} mode="contained" style= {styles.options} onPress = {()=>{checkAnswer(0)}}>
-//         {randomQuestions[questionNumber].getOptions[0]}
-//         </Button>
-//         <Button theme={theme}  mode="contained" style= {styles.options} onPress = {()=>{checkAnswer(1)}}>
-//           {randomQuestions[questionNumber].getOptions[1]}
-//         </Button>
-//         <Button theme={theme}  mode="contained" style= {styles.options} onPress = {()=>{checkAnswer(2)}}>
-//           {randomQuestions[questionNumber].getOptions[2]}
-//         </Button>
-//         <Button theme={theme}  mode="contained" style= {styles.options} onPress = {()=>{checkAnswer(3)}}>
-//           {randomQuestions[questionNumber].getOptions[3]}
-//         </Button>
